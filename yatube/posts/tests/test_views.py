@@ -209,7 +209,6 @@ class PostPaginatorTests(TestCase):
         self.authorized_client_author = Client()
         self.authorized_client_author.force_login(PostPaginatorTests.user)
 
-
     def test_first_page_contains_ten_records(self):
         response = self.authorized_client_author.get(
             reverse('post:group_list', kwargs={'slug': 'first'})
