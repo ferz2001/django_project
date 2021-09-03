@@ -143,7 +143,6 @@ def profile_follow(request, username):
             return redirect('post:profile', username=username)
         return redirect('post:profile', username=username)
     return redirect('post:profile', username=username)
-    
 
 
 @login_required
