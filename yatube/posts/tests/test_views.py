@@ -62,9 +62,6 @@ class PostViewsTests(TestCase):
         """URL-адрес использует соответствующий шаблон."""
         templates_page_names = {
             reverse(
-                'post:index'
-            ): 'posts/index.html',
-            reverse(
                 'post:group_list', kwargs={
                     'slug': PostViewsTests.group1.slug
                 }
@@ -106,14 +103,6 @@ class PostViewsTests(TestCase):
         self.assertEqual(post_text, post_result.text)
         self.assertEqual(str(post_group), str(post_result.group))
         self.assertEqual(post_id, post_result.id)
-
-    def test_index_page_show_correct_context(self):
-        """Шаблон index сформирован с правильным контекстом."""
-        response = self.authorized_client_author.get(reverse('post:index'))
-        first_obj_in_page = 0
-        last_obj_in_page = 9
-        self.context_test(first_obj_in_page, response)
-        self.context_test(last_obj_in_page, response)
 
     def test_group_page_show_correct_context(self):
         """Шаблон group_list сформирован с правильным контекстом.
@@ -182,27 +171,6 @@ class PostViewsTests(TestCase):
                 form_field = response.context['form'].fields[value]
                 self.assertIsInstance(form_field, expected)
 
-    def test_post_create_show_correct_in_3_page(self):
-        """Проверка появления поста №1 на главной странице,
-        странице группы2 и в профиле пользователя"""
-        response_index = self.authorized_client_author.get(
-            reverse('post:index')
-        )
-        response_group = self.authorized_client_author.get(
-            reverse('post:group_list', kwargs={
-                'slug': f'{PostViewsTests.group2.slug}'
-            })
-        )
-        response_profile = self.authorized_client_author.get(
-            reverse('post:profile', kwargs={
-                'username': f'{PostViewsTests.user.username}'
-            })
-        )
-        first_obj_in_page = 0
-        self.context_test(first_obj_in_page, response_index)
-        self.context_test(first_obj_in_page, response_group)
-        self.context_test(first_obj_in_page, response_profile)
-
 
 class PostPaginatorTests(TestCase):
     @classmethod
@@ -241,15 +209,6 @@ class PostPaginatorTests(TestCase):
         self.authorized_client_author = Client()
         self.authorized_client_author.force_login(PostPaginatorTests.user)
 
-    def test_first_page_contains_ten_records(self):
-        response = self.authorized_client_author.get(reverse('post:index'))
-        self.assertEqual(len(response.context['page_obj']), 10)
-
-    def test_second_page_contains_three_records(self):
-        response = self.authorized_client_author.get(
-            reverse('post:index') + '?page=2'
-        )
-        self.assertEqual(len(response.context['page_obj']), 5)
 
     def test_first_page_contains_ten_records(self):
         response = self.authorized_client_author.get(
@@ -317,9 +276,6 @@ class ImagePostViewsTests(TestCase):
 
     def test_image_in_pages(self):
         templates_page_names = {
-            reverse(
-                'post:index'
-            ): 'index',
             reverse(
                 'post:group_list', kwargs={
                     'slug': ImagePostViewsTests.group1.slug

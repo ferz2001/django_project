@@ -55,7 +55,6 @@ class PostURLTests(TestCase):
             'group_list': f'/group/{PostURLTests.group.slug}/',
             'profile': f'/profile/{PostURLTests.user.username}/',
             'post_detail': f'/posts/{PostURLTests.post.id}/',
-            'index': '/'
         }
         for page_name, url in pages.items():
             with self.subTest(page_name):
@@ -98,7 +97,6 @@ class PostURLTests(TestCase):
         """URL-адрес использует соответствующий шаблон."""
         # Шаблоны по адресам
         templates_url_names = {
-            '/': 'posts/index.html',
             f'/group/{PostURLTests.group.slug}/': 'posts/group_list.html',
             f'/profile/{PostURLTests.user.username}/': 'posts/profile.html',
             f'/posts/{PostURLTests.post.id}/': 'posts/post_detail.html',
