@@ -421,9 +421,19 @@ class FollowPostTests(TestCase):
             )
         )
         self.assertEqual(Follow.objects.count(), follow_cnt + 1)
+
+    def test_unfollowing(self):
+        follow_cnt = Follow.objects.count()
         response = self.authorized_client_n.get(reverse(
             'post:profile_unfollow', kwargs={
                 'username': FollowPostTests.user_post.username
             })
+        )
+        self.assertRedirects(
+            response, reverse(
+                'post:profile', kwargs={
+                    'username': FollowPostTests.user_post.username
+                }
+            )
         )
         self.assertEqual(Follow.objects.count(), follow_cnt)
