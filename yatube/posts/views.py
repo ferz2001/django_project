@@ -58,7 +58,9 @@ def profile(request, username):
     post_all = author.posts.all()
     post_cnt = author.posts.all().count()
     page_obj = paginate(request, post_all)
-    followings = author.following.filter(user=request.user).exists()
+    followings = Follow.objects.filter(
+        user__username=request.user.username, author=author
+    ).exists()
     following = False
     if followings:
         following = True
@@ -133,8 +135,8 @@ def follow_index(request):
 @login_required
 def profile_follow(request, username):
     author = User.objects.get(username=username)
-    if not request.user.following.filter(user=author).exists():
-        request.user.follower.get_or_create(
+    if request.user != author:
+        Follow.objects.get_or_create(
             user=request.user,
             author=author
         )
