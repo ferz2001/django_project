@@ -127,9 +127,9 @@ class CommentPostTests(TestCase):
 
     def test_comment_post_authorized(self):
         response = self.guest_client.get(
-            f'/posts/{CommentPostTests.post.id}/comment'
+            f'/posts/{CommentPostTests.post.id}/comment/'
         )
         self.assertRedirects(
             response,
-            f'/auth/login/?next=/posts/{CommentPostTests.post.id}/comment'
+            f'/auth/login/?next=/posts/{CommentPostTests.post.id}/comment/'
         )
