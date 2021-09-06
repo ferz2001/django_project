@@ -58,12 +58,9 @@ def profile(request, username):
     post_all = author.posts.all()
     post_cnt = author.posts.all().count()
     page_obj = paginate(request, post_all)
-    followings = Follow.objects.filter(
+    following = Follow.objects.filter(
         user__username=request.user.username, author=author
     ).exists()
-    following = False
-    if followings:
-        following = True
     context = {
         'page_obj': page_obj,
         'count': post_cnt,
@@ -121,8 +118,7 @@ def post_edit(request, post_id):
 @login_required
 def follow_index(request):
     template = 'posts/follow.html'
-    followers = request.user.follower.all()
-    posts = Post.objects.filter(author__following__in=followers)
+    posts = Post.objects.filter(author__following__user=request.user)
     page_obj = paginate(request, posts)
     text = "Последние записи авторов, на которых ты подписан"
     context = {
@@ -134,7 +130,7 @@ def follow_index(request):
 
 @login_required
 def profile_follow(request, username):
-    author = User.objects.get(username=username)
+    author = get_object_or_404(User, username=username)
     if request.user != author:
         Follow.objects.get_or_create(
             user=request.user,
